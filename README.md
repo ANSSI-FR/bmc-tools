@@ -19,5 +19,6 @@ With the following arguments meaning:
 ```
 ## Changelog
 ```
+01/07/2016		1.00a	cacheXXXX.bin header detection fixed.
 27/06/2016		1.00	Initial release.
 ```

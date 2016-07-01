@@ -5,7 +5,7 @@ import argparse, os, os.path, sys
 from struct import pack, unpack
 
 class BMCContainer():
-	BIN_FILE_HEADER = "RDP8bmp\x00\x03\x00\x00\x00"
+	BIN_FILE_HEADER = "RDP8bmp\x00"
 	BIN_CONTAINER = ".BIN"
 	BMC_CONTAINER = ".BMC"
 	TILE_HEADER_SIZE = {BMC_CONTAINER: 0x14, BIN_CONTAINER: 0xC}
@@ -41,7 +41,8 @@ class BMCContainer():
 		self.fname = fname
 		self.btype = self.BMC_CONTAINER
 		if self.bdat[:len(self.BIN_FILE_HEADER)] == self.BIN_FILE_HEADER:
-			self.bdat = self.bdat[len(self.BIN_FILE_HEADER):]
+			self.b_log(sys.stdout, True, 2, "Subsequent header version: %d." % (unpack("<L", self.bdat[len(self.BIN_FILE_HEADER):len(self.BIN_FILE_HEADER)+4])[0]))
+			self.bdat = self.bdat[len(self.BIN_FILE_HEADER)+4:]
 			self.btype = self.BIN_CONTAINER
 		self.b_log(sys.stdout, True, 0, "Successfully loaded '%s' as a %s container." % (self.fname, self.btype))
 		return True
