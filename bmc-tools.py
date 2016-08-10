@@ -125,8 +125,7 @@ class BMCContainer():
 		if not os.path.isdir(dname):
 			self.b_log(sys.stderr, False, 3, "Destination must be an already existing folder.")
 			return False
-		elif not os.path.isdir(os.path.join(dname, self.fname).rsplit(os.sep, 1)[0]):
-			os.makedirs(os.path.join(dname, self.fname).rsplit(os.sep, 1)[0])
+		self.fname = os.path.basename(self.fname)
 		for i in range(len(self.bmps)):
 			self.b_write(os.path.join(dname, "%s_%04d.bmp" % (self.fname, i)), self.b_export_bmp(64, len(self.bmps[i])/256, self.bmps[i]))
 			if self.oldsave and len(self.o_bmps[i]) > 0:
