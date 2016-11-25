@@ -50,6 +50,7 @@ class BMCContainer():
 		if len(self.bdat) == 0:
 			self.b_log(sys.stderr, False, 3, "Nothing to process.")
 			return False
+		bl = 0
 		while len(self.bdat) > 0:
 			old = False
 			o_bmp = ""
@@ -63,7 +64,23 @@ class BMCContainer():
 				t_len, t_params = unpack("<LL", t_hdr[-0x8:])
 				if t_params & 0x08: #This bit is always ONE when relevant data is smaller than expected data, thus it is most likely the "compression" bit flag.
 					self.b_log(sys.stdout, False, 3, "Tile data is compressed (%d bytes compressed in %d bytes); skipping." % (t_width*t_height*4, t_len))
-					bl = 64*64*2
+					if bl == 0:
+						if "22.bmc" in self.fname:
+							bl = 64*64*2
+						elif "24.bmc" in self.fname:
+							bl = 64*64*4
+						elif "2.bmc" in self.fname:
+							bl = 64*64
+						else:
+							for b in [1, 2, 4]:
+								if len(self.bdat) < len(t_hdr)+64*64*b+8:
+									break
+								elif unpack("<H", self.bdat[len(t_hdr)+64*64*b+8:][:2])[0] == 64:
+									bl = 64*64*b
+									break
+							if bl == 0:
+								self.b_log(sys.stderr, False, 3, "Unable to determine data pattern size; exiting before throwing any error!")
+								return False
 				else:
 					cf = t_len/(t_width*t_height)
 					if cf not in [1, 2, 4]:
