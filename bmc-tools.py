@@ -50,7 +50,6 @@ class BMCContainer():
 		if len(self.bdat) == 0:
 			self.b_log(sys.stderr, False, 3, "Nothing to process.")
 			return False
-		off = 0
 		while len(self.bdat) > 0:
 			old = False
 			o_bmp = ""
@@ -92,7 +91,6 @@ class BMCContainer():
 				self.o_bmps.append(o_bmp)
 				if len(self.bmps)%100 == 0:
 					self.b_log(sys.stdout, True, 1, "%d tiles successfully extracted so far." % (len(self.bmps)))
-			off+=len(t_hdr)+bl
 			self.bdat = self.bdat[len(t_hdr)+bl:]
 			if self.cnt != 0 and len(self.bmps) == self.cnt:
 				break

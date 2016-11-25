@@ -19,6 +19,7 @@ With the following arguments meaning:
 ```
 ## Changelog
 ```
+25/11/2016		1.00c	Unused variable removed.
 10/08/2016		1.00b	--dest parameter processing fixed.
 01/07/2016		1.00a	cacheXXXX.bin header detection fixed.
 27/06/2016		1.00	Initial release.
