@@ -83,14 +83,16 @@ class BMCContainer():
 								return False
 				else:
 					cf = t_len/(t_width*t_height)
-					if cf not in [1, 2, 4]:
-						self.b_log(sys.stderr, False, 3, "Unexpected bpp (%d) found during processing; aborting." % (8*cf))
-						return False
 					if cf == 4:
 						t_bmp = self.b_parse_rgb32b(self.bdat[len(t_hdr):len(t_hdr)+cf*t_width*t_height])
 						if t_height != 64:
 							old = True
 							o_bmp = self.b_parse_rgb32b(self.bdat[len(t_hdr)+cf*t_width*t_height:len(t_hdr)+cf*64*64])
+					elif cf == 3:
+						t_bmp = self.b_parse_rgb24b(self.bdat[len(t_hdr):len(t_hdr)+cf*t_width*t_height])
+						if t_height != 64:
+							old = True
+							o_bmp = self.b_parse_rgb24b(self.bdat[len(t_hdr)+cf*t_width*t_height:len(t_hdr)+cf*64*64])
 					elif cf == 2:
 						t_bmp = self.b_parse_rgb565(self.bdat[len(t_hdr):len(t_hdr)+cf*t_width*t_height])
 						if t_height != 64:
@@ -102,6 +104,9 @@ class BMCContainer():
 						if t_height != 64:
 							old = True
 							o_bmp = self.PALETTE+self.bdat[len(t_hdr)+cf*t_width*t_height:len(t_hdr)+cf*64*64]
+					else:
+						self.b_log(sys.stderr, False, 3, "Unexpected bpp (%d) found during processing; aborting." % (8*cf))
+						return False
 					bl = cf*64*64
 			if len(t_bmp) > 0:
 				self.bmps.append(t_bmp)
@@ -111,7 +116,7 @@ class BMCContainer():
 			self.bdat = self.bdat[len(t_hdr)+bl:]
 			if self.cnt != 0 and len(self.bmps) == self.cnt:
 				break
-		self.b_log(sys.stdout, True, 0, "%d tiles successfully extracted in the end." % (len(self.bmps)))
+		self.b_log(sys.stdout, False, 0, "%d tiles successfully extracted in the end." % (len(self.bmps)))
 		return True
 	def b_parse_rgb565(self, data):
 		d_out = ""
@@ -135,6 +140,19 @@ class BMCContainer():
 			else:
 				d_out+=data[:3]+"\xFF"
 			data = data[4:]
+		return d_out
+	def b_parse_rgb24b(self, data):
+		d_out = ""
+		d_buf = ""
+		while len(data) > 0:
+			if self.btype == self.BIN_CONTAINER:
+				d_buf+=data[:3]+"\xFF"
+				if len(d_buf) == 256:
+					d_out = d_buf+d_out
+					d_buf = ""
+			else:
+				d_out+=data[:3]+"\xFF"
+			data = data[3:]
 		return d_out
 	def b_export(self, dname):
 		if not os.path.isdir(dname):
@@ -163,7 +181,7 @@ class BMCContainer():
 		return True
 
 if __name__ == "__main__":
-	prs = argparse.ArgumentParser(description="RDP Bitmap Cache parser (v. 1.00, 27/06/2016)")
+	prs = argparse.ArgumentParser(description="RDP Bitmap Cache parser (v. 1.02, 22/04/2018)")
 	prs.add_argument("-o", "--old", help="Extract the old bitmap data found in the BMCache file.", action="store_true", default=False)
 	prs.add_argument("-d", "--dest", help="Specify the directory where to store the extracted bitmaps.", required=True)
 	prs.add_argument("-c", "--count", help="Only extract the given number of bitmaps.", type=int, default=-1)

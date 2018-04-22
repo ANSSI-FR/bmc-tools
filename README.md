@@ -19,6 +19,7 @@ With the following arguments meaning:
 ```
 ## Changelog
 ```
+22/04/2018		1.02	Added support for (old?) bcache23.bmc files.
 25/11/2016		1.01	Compressed data handling improved.
 25/11/2016		1.00c	Unused variable removed.
 10/08/2016		1.00b	--dest parameter processing fixed.
