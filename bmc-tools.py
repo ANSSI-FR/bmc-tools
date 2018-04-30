@@ -9,9 +9,10 @@ class BMCContainer():
 	BIN_CONTAINER = ".BIN"
 	BMC_CONTAINER = ".BMC"
 	TILE_HEADER_SIZE = {BMC_CONTAINER: 0x14, BIN_CONTAINER: 0xC}
+	STRIPE_WIDTH = 64
 	LOG_TYPES = ["[===]", "[+++]", "[---]", "[!!!]"]
 	PALETTE = "00000000000080000080000000808000800000008000800080800000C0C0C000C0DCC000F0CAA6000020400000206000002080000020A0000020C0000020E00000400000004020000040400000406000004080000040A0000040C0000040E00000600000006020000060400000606000006080000060A0000060C0000060E00000800000008020000080400000806000008080000080A0000080C0000080E00000A0000000A0200000A0400000A0600000A0800000A0A00000A0C00000A0E00000C0000000C0200000C0400000C0600000C0800000C0A00000C0C00000C0E00000E0000000E0200000E0400000E0600000E0800000E0A00000E0C00000E0E00040000000400020004000400040006000400080004000A0004000C0004000E00040200000402020004020400040206000402080004020A0004020C0004020E00040400000404020004040400040406000404080004040A0004040C0004040E00040600000406020004060400040606000406080004060A0004060C0004060E00040800000408020004080400040806000408080004080A0004080C0004080E00040A0000040A0200040A0400040A0600040A0800040A0A00040A0C00040A0E00040C0000040C0200040C0400040C0600040C0800040C0A00040C0C00040C0E00040E0000040E0200040E0400040E0600040E0800040E0A00040E0C00040E0E00080000000800020008000400080006000800080008000A0008000C0008000E00080200000802020008020400080206000802080008020A0008020C0008020E00080400000804020008040400080406000804080008040A0008040C0008040E00080600000806020008060400080606000806080008060A0008060C0008060E00080800000808020008080400080806000808080008080A0008080C0008080E00080A0000080A0200080A0400080A0600080A0800080A0A00080A0C00080A0E00080C0000080C0200080C0400080C0600080C0800080C0A00080C0C00080C0E00080E0000080E0200080E0400080E0600080E0800080E0A00080E0C00080E0E000C0000000C0002000C0004000C0006000C0008000C000A000C000C000C000E000C0200000C0202000C0204000C0206000C0208000C020A000C020C000C020E000C0400000C0402000C0404000C0406000C0408000C040A000C040C000C040E000C0600000C0602000C0604000C0606000C0608000C060A000C060C000C060E000C0800000C0802000C0804000C0806000C0808000C080A000C080C000C080E000C0A00000C0A02000C0A04000C0A06000C0A08000C0A0A000C0A0C000C0A0E000C0C00000C0C02000C0C04000C0C06000C0C08000C0C0A000F0FBFF00A4A0A000808080000000FF0000FF000000FFFF00FF000000FF00FF00FFFF0000FFFFFF00".decode("hex")
-	def __init__(self, verbose=False, count=0, old=False):
+	def __init__(self, verbose=False, count=0, old=False, big=False, width=64):
 		self.bdat = ""
 		self.o_bmps = []
 		self.bmps = []
@@ -21,6 +22,8 @@ class BMCContainer():
 		self.oldsave = old
 		self.pal = False
 		self.verb = verbose
+		self.big = big
+		self.STRIPE_WIDTH = width
 		if count > 0:
 			self.b_log(sys.stdout, True, 2, "At most %d tiles will be processed." % (count))
 		if old:
@@ -164,6 +167,34 @@ class BMCContainer():
 			if self.oldsave and len(self.o_bmps[i]) > 0:
 				self.b_write(os.path.join(dname, "%s_old_%04d.bmp" % (self.fname, i)), self.b_export_bmp(64, len(self.o_bmps[i])/256, self.o_bmps[i]))
 		self.b_log(sys.stdout, False, 0, "Successfully exported %d files." % (len(self.bmps)))
+		if self.big:
+			pad = "\xFF"
+			if not self.pal:
+				pad*=4
+			for i in range(len(self.bmps)):
+				if self.pal:
+					self.bmps[i] = self.bmps[i][len(self.PALETTE):]
+				while len(self.bmps[i]) != 64*64*len(pad):
+					self.bmps[i]+=pad*64
+			w = 64*len(self.bmps)
+			h = 64
+			if len(self.bmps)/self.STRIPE_WIDTH > 0:
+				m = len(self.bmps)%self.STRIPE_WIDTH
+				if m != 0:
+					for i in range(self.STRIPE_WIDTH-m):
+						self.bmps.append(pad*64*64)
+				w = self.STRIPE_WIDTH*64
+				h*=len(self.bmps)/self.STRIPE_WIDTH
+			c_bmp = "" if not self.pal else self.PALETTE
+			for i in range(h/64):
+				for j in range(64):
+					for k in range(w/64):
+						if self.btype == self.BIN_CONTAINER:
+							c_bmp+=self.bmps[self.STRIPE_WIDTH*(i+1)-1-k][64*len(pad)*j:64*len(pad)*(j+1)]
+						else:
+							c_bmp+=self.bmps[self.STRIPE_WIDTH*i+k][64*len(pad)*j:64*len(pad)*(j+1)]
+			self.b_write(os.path.join(dname, "%s_collage.bmp" % (self.fname)), self.b_export_bmp(w, h, c_bmp))
+			self.b_log(sys.stdout, False, 0, "Successfully exported collage file.")
 		return True
 	def b_export_bmp(self, width, height, data):
 		if not self.pal:
@@ -181,14 +212,16 @@ class BMCContainer():
 		return True
 
 if __name__ == "__main__":
-	prs = argparse.ArgumentParser(description="RDP Bitmap Cache parser (v. 1.02, 22/04/2018)")
-	prs.add_argument("-o", "--old", help="Extract the old bitmap data found in the BMCache file.", action="store_true", default=False)
+	prs = argparse.ArgumentParser(description="RDP Bitmap Cache parser (v. 1.03, 30/04/2018)")
+	prs.add_argument("-s", "--src", help="Specify the BMCache file or directory to process.", required=True)
 	prs.add_argument("-d", "--dest", help="Specify the directory where to store the extracted bitmaps.", required=True)
 	prs.add_argument("-c", "--count", help="Only extract the given number of bitmaps.", type=int, default=-1)
-	prs.add_argument("-s", "--src", help="Specify the BMCache file or directory to process.", required=True)
 	prs.add_argument("-v", "--verbose", help="Determine the amount of information displayed.", action="store_true", default=False)
+	prs.add_argument("-o", "--old", help="Extract the old bitmap data found in the BMCache file.", action="store_true", default=False)
+	prs.add_argument("-b", "--bitmap", help="Provide a big bitmap aggregating all the tiles.", action="store_true", default=False)
+	prs.add_argument("-w", "--width", help="Specify the number of tiles per line of the aggregated bitmap (default=64).", type=int, default=64)
 	args = prs.parse_args(sys.argv[1:])
-	bmcc = BMCContainer(verbose=args.verbose, count=args.count, old=args.old)
+	bmcc = BMCContainer(verbose=args.verbose, count=args.count, old=args.old, big=args.bitmap, width=args.width)
 	if os.path.isdir(args.src):
 		sys.stdout.write("[+++] Processing a directory...%s" % (os.linesep))
 		src_files = []

@@ -4,21 +4,22 @@ RDP Bitmap Cache parser.
 `bmc-tools` processes `bcache*.bmc` and `cache????.bin` files found inside Windows user profiles.
 ## Usage
 ```sh
-./bmc-tools.py [-h] [-o] -d DEST [-c COUNT] -s SRC [-v]
+./bmc-tools.py [-h] -s SRC -d DEST [-c COUNT] [-v] [-o] [-b] [-w WIDTH]
 ```
 With the following arguments meaning:
 ```
-  -h, --help            show this help message and exit
-  -o, --old             Extract the old bitmap data found in the BMCache file.
-  -d DEST, --dest DEST  Specify the directory where to store the extracted
-                        bitmaps.
-  -c COUNT, --count COUNT
-                        Only extract the given number of bitmaps.
-  -s SRC, --src SRC     Specify the BMCache file or directory to process.
-  -v, --verbose         Determine the amount of information displayed.
+  -h, --help              show this help message and exit
+  -s SRC, --src SRC       Specify the BMCache file or directory to process.
+  -d DEST, --dest DEST    Specify the directory where to store the extracted bitmaps.
+  -c COUNT, --count COUNT Only extract the given number of bitmaps.
+  -v, --verbose           Determine the amount of information displayed.
+  -o, --old               Extract the old bitmap data found in the BMCache file.
+  -b, --bitmap            Provide a collage bitmap aggregating all the tiles.
+  -w WIDTH, --width WIDTH Specify the number of tiles per line of the aggregated bitmap (default=64).
 ```
 ## Changelog
 ```
+30/04/2018		1.03	Added extra aggregated bitmap/collage output.
 22/04/2018		1.02	Added support for (old?) bcache23.bmc files.
 25/11/2016		1.01	Compressed data handling improved.
 25/11/2016		1.00c	Unused variable removed.
