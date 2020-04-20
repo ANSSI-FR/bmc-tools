@@ -192,7 +192,6 @@ class BMCContainer():
 				collage_builder = (lambda x, a=self, PAD=len(pad), WIDTH=range(int(w / 64)): ''.join([''.join([a.bmps[a.STRIPE_WIDTH*x+k][64*PAD*j:64*PAD*(j+1)] for k in WIDTH]) for j in range(64)]))
 
 			c_bmp += ''.join(map(collage_builder, range(int(h/64))))
-			print c_bmp[:300]
 			self.b_write(os.path.join(dname, "%s_collage.bmp" % (self.fname)), self.b_export_bmp(w, h, c_bmp))
 			self.b_log(sys.stdout, False, 0, "Successfully exported collage file.")
 		return True
