@@ -186,13 +186,13 @@ class BMCContainer():
 				w = self.STRIPE_WIDTH*64
 				h*=len(self.bmps)/self.STRIPE_WIDTH
 			c_bmp = "" if not self.pal else self.PALETTE
-			for i in range(h/64):
-				for j in range(64):
-					for k in range(w/64):
-						if self.btype == self.BIN_CONTAINER:
-							c_bmp+=self.bmps[self.STRIPE_WIDTH*(i+1)-1-k][64*len(pad)*j:64*len(pad)*(j+1)]
-						else:
-							c_bmp+=self.bmps[self.STRIPE_WIDTH*i+k][64*len(pad)*j:64*len(pad)*(j+1)]
+			if self.btype == self.BIN_CONTAINER:
+				collage_builder = (lambda x, a=self, PAD=len(pad), WIDTH=range(int(w / 64)): ''.join([''.join([a.bmps[a.STRIPE_WIDTH*(x+1)-1-k][64*PAD*j:64*PAD*(j+1)] for k in WIDTH]) for j in range(64)]))
+			else:
+				collage_builder = (lambda x, a=self, PAD=len(pad), WIDTH=range(int(w / 64)): ''.join([''.join([a.bmps[a.STRIPE_WIDTH*x+k][64*PAD*j:64*PAD*(j+1)] for k in WIDTH]) for j in range(64)]))
+
+			c_bmp += ''.join(map(collage_builder, range(int(h/64))))
+			print c_bmp[:300]
 			self.b_write(os.path.join(dname, "%s_collage.bmp" % (self.fname)), self.b_export_bmp(w, h, c_bmp))
 			self.b_log(sys.stdout, False, 0, "Successfully exported collage file.")
 		return True
