@@ -198,7 +198,7 @@ class BMCContainer():
 		return True
 	def b_export_bmp(self, width, height, data):
 		if not self.pal:
-			return "BM"+pack("<L", len(data)+126)+"\x00\x00\x00\x00\x7A\x00\x00\x00\x6C\x00\x00\x00"+pack("<L", width)+pack("<L", height)+"\x01\x00\x20\x00\x03\x00\x00\x00"+pack("<L", len(data))+"\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\xFF\x00\x00\xFF\x00\x00\xFF\x00\x00\x00\x00\x00\x00\xFF niW"+("\x00"*36)+"\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00"+data
+			return "BM"+pack("<L", len(data)+122)+"\x00\x00\x00\x00\x7A\x00\x00\x00\x6C\x00\x00\x00"+pack("<L", width)+pack("<L", height)+"\x01\x00\x20\x00\x03\x00\x00\x00"+pack("<L", len(data))+"\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\xFF\x00\x00\xFF\x00\x00\xFF\x00\x00\x00\x00\x00\x00\xFF niW"+("\x00"*36)+"\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00"+data
 		else:
 			return "BM"+pack("<L", len(data)+0x36)+"\x00\x00\x00\x00\x36\x04\x00\x00\x28\x00\x00\x00"+pack("<L", width)+pack("<L", height)+"\x01\x00\x08\x00\x00\x00\x00\x00"+pack("<L", len(data)-0x400)+"\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00"+data
 	def b_write(self, fname, data):
@@ -212,7 +212,7 @@ class BMCContainer():
 		return True
 
 if __name__ == "__main__":
-	prs = argparse.ArgumentParser(description="RDP Bitmap Cache parser (v. 1.03, 30/04/2018)")
+	prs = argparse.ArgumentParser(description="RDP Bitmap Cache parser (v. 1.04, 23/11/2020)")
 	prs.add_argument("-s", "--src", help="Specify the BMCache file or directory to process.", required=True)
 	prs.add_argument("-d", "--dest", help="Specify the directory where to store the extracted bitmaps.", required=True)
 	prs.add_argument("-c", "--count", help="Only extract the given number of bitmaps.", type=int, default=-1)

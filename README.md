@@ -19,6 +19,7 @@ With the following arguments meaning:
 ```
 ## Changelog
 ```
+23/11/2020		1.04	Fixed Bitmap size field.
 30/04/2018		1.03	Added extra aggregated bitmap/collage output.
 22/04/2018		1.02	Added support for (old?) bcache23.bmc files.
 25/11/2016		1.01	Compressed data handling improved.
