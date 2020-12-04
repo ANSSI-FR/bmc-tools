@@ -5,13 +5,13 @@ import argparse, os, os.path, sys
 from struct import pack, unpack
 
 class BMCContainer():
-	BIN_FILE_HEADER = "RDP8bmp\x00"
-	BIN_CONTAINER = ".BIN"
-	BMC_CONTAINER = ".BMC"
+	BIN_FILE_HEADER = b"RDP8bmp\x00"
+	BIN_CONTAINER = b".BIN"
+	BMC_CONTAINER = b".BMC"
 	TILE_HEADER_SIZE = {BMC_CONTAINER: 0x14, BIN_CONTAINER: 0xC}
 	STRIPE_WIDTH = 64
 	LOG_TYPES = ["[===]", "[+++]", "[---]", "[!!!]"]
-	PALETTE = "00000000000080000080000000808000800000008000800080800000C0C0C000C0DCC000F0CAA6000020400000206000002080000020A0000020C0000020E00000400000004020000040400000406000004080000040A0000040C0000040E00000600000006020000060400000606000006080000060A0000060C0000060E00000800000008020000080400000806000008080000080A0000080C0000080E00000A0000000A0200000A0400000A0600000A0800000A0A00000A0C00000A0E00000C0000000C0200000C0400000C0600000C0800000C0A00000C0C00000C0E00000E0000000E0200000E0400000E0600000E0800000E0A00000E0C00000E0E00040000000400020004000400040006000400080004000A0004000C0004000E00040200000402020004020400040206000402080004020A0004020C0004020E00040400000404020004040400040406000404080004040A0004040C0004040E00040600000406020004060400040606000406080004060A0004060C0004060E00040800000408020004080400040806000408080004080A0004080C0004080E00040A0000040A0200040A0400040A0600040A0800040A0A00040A0C00040A0E00040C0000040C0200040C0400040C0600040C0800040C0A00040C0C00040C0E00040E0000040E0200040E0400040E0600040E0800040E0A00040E0C00040E0E00080000000800020008000400080006000800080008000A0008000C0008000E00080200000802020008020400080206000802080008020A0008020C0008020E00080400000804020008040400080406000804080008040A0008040C0008040E00080600000806020008060400080606000806080008060A0008060C0008060E00080800000808020008080400080806000808080008080A0008080C0008080E00080A0000080A0200080A0400080A0600080A0800080A0A00080A0C00080A0E00080C0000080C0200080C0400080C0600080C0800080C0A00080C0C00080C0E00080E0000080E0200080E0400080E0600080E0800080E0A00080E0C00080E0E000C0000000C0002000C0004000C0006000C0008000C000A000C000C000C000E000C0200000C0202000C0204000C0206000C0208000C020A000C020C000C020E000C0400000C0402000C0404000C0406000C0408000C040A000C040C000C040E000C0600000C0602000C0604000C0606000C0608000C060A000C060C000C060E000C0800000C0802000C0804000C0806000C0808000C080A000C080C000C080E000C0A00000C0A02000C0A04000C0A06000C0A08000C0A0A000C0A0C000C0A0E000C0C00000C0C02000C0C04000C0C06000C0C08000C0C0A000F0FBFF00A4A0A000808080000000FF0000FF000000FFFF00FF000000FF00FF00FFFF0000FFFFFF00".decode("hex")
+	PALETTE = bytes(bytearray((0, 0, 0, 0, 0, 0, 128, 0, 0, 128, 0, 0, 0, 128, 128, 0, 128, 0, 0, 0, 128, 0, 128, 0, 128, 128, 0, 0, 192, 192, 192, 0, 192, 220, 192, 0, 240, 202, 166, 0, 0, 32, 64, 0, 0, 32, 96, 0, 0, 32, 128, 0, 0, 32, 160, 0, 0, 32, 192, 0, 0, 32, 224, 0, 0, 64, 0, 0, 0, 64, 32, 0, 0, 64, 64, 0, 0, 64, 96, 0, 0, 64, 128, 0, 0, 64, 160, 0, 0, 64, 192, 0, 0, 64, 224, 0, 0, 96, 0, 0, 0, 96, 32, 0, 0, 96, 64, 0, 0, 96, 96, 0, 0, 96, 128, 0, 0, 96, 160, 0, 0, 96, 192, 0, 0, 96, 224, 0, 0, 128, 0, 0, 0, 128, 32, 0, 0, 128, 64, 0, 0, 128, 96, 0, 0, 128, 128, 0, 0, 128, 160, 0, 0, 128, 192, 0, 0, 128, 224, 0, 0, 160, 0, 0, 0, 160, 32, 0, 0, 160, 64, 0, 0, 160, 96, 0, 0, 160, 128, 0, 0, 160, 160, 0, 0, 160, 192, 0, 0, 160, 224, 0, 0, 192, 0, 0, 0, 192, 32, 0, 0, 192, 64, 0, 0, 192, 96, 0, 0, 192, 128, 0, 0, 192, 160, 0, 0, 192, 192, 0, 0, 192, 224, 0, 0, 224, 0, 0, 0, 224, 32, 0, 0, 224, 64, 0, 0, 224, 96, 0, 0, 224, 128, 0, 0, 224, 160, 0, 0, 224, 192, 0, 0, 224, 224, 0, 64, 0, 0, 0, 64, 0, 32, 0, 64, 0, 64, 0, 64, 0, 96, 0, 64, 0, 128, 0, 64, 0, 160, 0, 64, 0, 192, 0, 64, 0, 224, 0, 64, 32, 0, 0, 64, 32, 32, 0, 64, 32, 64, 0, 64, 32, 96, 0, 64, 32, 128, 0, 64, 32, 160, 0, 64, 32, 192, 0, 64, 32, 224, 0, 64, 64, 0, 0, 64, 64, 32, 0, 64, 64, 64, 0, 64, 64, 96, 0, 64, 64, 128, 0, 64, 64, 160, 0, 64, 64, 192, 0, 64, 64, 224, 0, 64, 96, 0, 0, 64, 96, 32, 0, 64, 96, 64, 0, 64, 96, 96, 0, 64, 96, 128, 0, 64, 96, 160, 0, 64, 96, 192, 0, 64, 96, 224, 0, 64, 128, 0, 0, 64, 128, 32, 0, 64, 128, 64, 0, 64, 128, 96, 0, 64, 128, 128, 0, 64, 128, 160, 0, 64, 128, 192, 0, 64, 128, 224, 0, 64, 160, 0, 0, 64, 160, 32, 0, 64, 160, 64, 0, 64, 160, 96, 0, 64, 160, 128, 0, 64, 160, 160, 0, 64, 160, 192, 0, 64, 160, 224, 0, 64, 192, 0, 0, 64, 192, 32, 0, 64, 192, 64, 0, 64, 192, 96, 0, 64, 192, 128, 0, 64, 192, 160, 0, 64, 192, 192, 0, 64, 192, 224, 0, 64, 224, 0, 0, 64, 224, 32, 0, 64, 224, 64, 0, 64, 224, 96, 0, 64, 224, 128, 0, 64, 224, 160, 0, 64, 224, 192, 0, 64, 224, 224, 0, 128, 0, 0, 0, 128, 0, 32, 0, 128, 0, 64, 0, 128, 0, 96, 0, 128, 0, 128, 0, 128, 0, 160, 0, 128, 0, 192, 0, 128, 0, 224, 0, 128, 32, 0, 0, 128, 32, 32, 0, 128, 32, 64, 0, 128, 32, 96, 0, 128, 32, 128, 0, 128, 32, 160, 0, 128, 32, 192, 0, 128, 32, 224, 0, 128, 64, 0, 0, 128, 64, 32, 0, 128, 64, 64, 0, 128, 64, 96, 0, 128, 64, 128, 0, 128, 64, 160, 0, 128, 64, 192, 0, 128, 64, 224, 0, 128, 96, 0, 0, 128, 96, 32, 0, 128, 96, 64, 0, 128, 96, 96, 0, 128, 96, 128, 0, 128, 96, 160, 0, 128, 96, 192, 0, 128, 96, 224, 0, 128, 128, 0, 0, 128, 128, 32, 0, 128, 128, 64, 0, 128, 128, 96, 0, 128, 128, 128, 0, 128, 128, 160, 0, 128, 128, 192, 0, 128, 128, 224, 0, 128, 160, 0, 0, 128, 160, 32, 0, 128, 160, 64, 0, 128, 160, 96, 0, 128, 160, 128, 0, 128, 160, 160, 0, 128, 160, 192, 0, 128, 160, 224, 0, 128, 192, 0, 0, 128, 192, 32, 0, 128, 192, 64, 0, 128, 192, 96, 0, 128, 192, 128, 0, 128, 192, 160, 0, 128, 192, 192, 0, 128, 192, 224, 0, 128, 224, 0, 0, 128, 224, 32, 0, 128, 224, 64, 0, 128, 224, 96, 0, 128, 224, 128, 0, 128, 224, 160, 0, 128, 224, 192, 0, 128, 224, 224, 0, 192, 0, 0, 0, 192, 0, 32, 0, 192, 0, 64, 0, 192, 0, 96, 0, 192, 0, 128, 0, 192, 0, 160, 0, 192, 0, 192, 0, 192, 0, 224, 0, 192, 32, 0, 0, 192, 32, 32, 0, 192, 32, 64, 0, 192, 32, 96, 0, 192, 32, 128, 0, 192, 32, 160, 0, 192, 32, 192, 0, 192, 32, 224, 0, 192, 64, 0, 0, 192, 64, 32, 0, 192, 64, 64, 0, 192, 64, 96, 0, 192, 64, 128, 0, 192, 64, 160, 0, 192, 64, 192, 0, 192, 64, 224, 0, 192, 96, 0, 0, 192, 96, 32, 0, 192, 96, 64, 0, 192, 96, 96, 0, 192, 96, 128, 0, 192, 96, 160, 0, 192, 96, 192, 0, 192, 96, 224, 0, 192, 128, 0, 0, 192, 128, 32, 0, 192, 128, 64, 0, 192, 128, 96, 0, 192, 128, 128, 0, 192, 128, 160, 0, 192, 128, 192, 0, 192, 128, 224, 0, 192, 160, 0, 0, 192, 160, 32, 0, 192, 160, 64, 0, 192, 160, 96, 0, 192, 160, 128, 0, 192, 160, 160, 0, 192, 160, 192, 0, 192, 160, 224, 0, 192, 192, 0, 0, 192, 192, 32, 0, 192, 192, 64, 0, 192, 192, 96, 0, 192, 192, 128, 0, 192, 192, 160, 0, 240, 251, 255, 0, 164, 160, 160, 0, 128, 128, 128, 0, 0, 0, 255, 0, 0, 255, 0, 0, 0, 255, 255, 0, 255, 0, 0, 0, 255, 0, 255, 0, 255, 255, 0, 0, 255, 255, 255, 0)))
 	def __init__(self, verbose=False, count=0, old=False, big=False, width=64):
 		self.bdat = ""
 		self.o_bmps = []
@@ -85,7 +85,7 @@ class BMCContainer():
 								self.b_log(sys.stderr, False, 3, "Unable to determine data pattern size; exiting before throwing any error!")
 								return False
 				else:
-					cf = t_len/(t_width*t_height)
+					cf = t_len//(t_width*t_height)
 					if cf == 4:
 						t_bmp = self.b_parse_rgb32b(self.bdat[len(t_hdr):len(t_hdr)+cf*t_width*t_height])
 						if t_height != 64:
@@ -122,39 +122,39 @@ class BMCContainer():
 		self.b_log(sys.stdout, False, 0, "%d tiles successfully extracted in the end." % (len(self.bmps)))
 		return True
 	def b_parse_rgb565(self, data):
-		d_out = ""
+		d_out = b""
 		while len(data) > 0:
 			pxl = unpack("<H", data[:2])[0]
 			bl = ((pxl>>8)&0xF8)|((pxl>>13)&0x07)
 			gr = ((pxl>>3)&0xFC)|((pxl>>9)&0x03)
 			re = ((pxl<<3)&0xF8)|((pxl>>2)&0x07)
-			d_out+=chr(re)+chr(gr)+chr(bl)+"\xFF"
+			d_out+=bytearray((re, gr, bl, 255))
 			data = data[2:]
-		return d_out
+		return bytes(d_out)
 	def b_parse_rgb32b(self, data):
-		d_out = ""
-		d_buf = ""
+		d_out = b""
+		d_buf = b""
 		while len(data) > 0:
 			if self.btype == self.BIN_CONTAINER:
-				d_buf+=data[:3]+"\xFF"
+				d_buf+=data[:3]+b"\xFF"
 				if len(d_buf) == 256:
 					d_out = d_buf+d_out
-					d_buf = ""
+					d_buf = b""
 			else:
-				d_out+=data[:3]+"\xFF"
+				d_out+=data[:3]+b"\xFF"
 			data = data[4:]
 		return d_out
 	def b_parse_rgb24b(self, data):
-		d_out = ""
-		d_buf = ""
+		d_out = b""
+		d_buf = b""
 		while len(data) > 0:
 			if self.btype == self.BIN_CONTAINER:
-				d_buf+=data[:3]+"\xFF"
+				d_buf+=data[:3]+b"\xFF"
 				if len(d_buf) == 256:
 					d_out = d_buf+d_out
-					d_buf = ""
+					d_buf = b""
 			else:
-				d_out+=data[:3]+"\xFF"
+				d_out+=data[:3]+b"\xFF"
 			data = data[3:]
 		return d_out
 	def b_export(self, dname):
@@ -163,12 +163,12 @@ class BMCContainer():
 			return False
 		self.fname = os.path.basename(self.fname)
 		for i in range(len(self.bmps)):
-			self.b_write(os.path.join(dname, "%s_%04d.bmp" % (self.fname, i)), self.b_export_bmp(64, len(self.bmps[i])/256, self.bmps[i]))
+			self.b_write(os.path.join(dname, "%s_%04d.bmp" % (self.fname, i)), self.b_export_bmp(64, len(self.bmps[i])//256, self.bmps[i]))
 			if self.oldsave and len(self.o_bmps[i]) > 0:
-				self.b_write(os.path.join(dname, "%s_old_%04d.bmp" % (self.fname, i)), self.b_export_bmp(64, len(self.o_bmps[i])/256, self.o_bmps[i]))
+				self.b_write(os.path.join(dname, "%s_old_%04d.bmp" % (self.fname, i)), self.b_export_bmp(64, len(self.o_bmps[i])//256, self.o_bmps[i]))
 		self.b_log(sys.stdout, False, 0, "Successfully exported %d files." % (len(self.bmps)))
 		if self.big:
-			pad = "\xFF"
+			pad = b"\xFF"
 			if not self.pal:
 				pad*=4
 			for i in range(len(self.bmps)):
@@ -178,29 +178,28 @@ class BMCContainer():
 					self.bmps[i]+=pad*64
 			w = 64*len(self.bmps)
 			h = 64
-			if len(self.bmps)/self.STRIPE_WIDTH > 0:
+			if len(self.bmps)//self.STRIPE_WIDTH > 0:
 				m = len(self.bmps)%self.STRIPE_WIDTH
 				if m != 0:
 					for i in range(self.STRIPE_WIDTH-m):
 						self.bmps.append(pad*64*64)
 				w = self.STRIPE_WIDTH*64
-				h*=len(self.bmps)/self.STRIPE_WIDTH
-			c_bmp = "" if not self.pal else self.PALETTE
-			for i in range(h/64):
-				for j in range(64):
-					for k in range(w/64):
-						if self.btype == self.BIN_CONTAINER:
-							c_bmp+=self.bmps[self.STRIPE_WIDTH*(i+1)-1-k][64*len(pad)*j:64*len(pad)*(j+1)]
-						else:
-							c_bmp+=self.bmps[self.STRIPE_WIDTH*i+k][64*len(pad)*j:64*len(pad)*(j+1)]
+				h*=len(self.bmps)//self.STRIPE_WIDTH
+			c_bmp = b"" if not self.pal else self.PALETTE
+			if self.btype == self.BIN_CONTAINER:
+				collage_builder = (lambda x, a=self, PAD=len(pad), WIDTH=range(w // 64): b''.join([b''.join([a.bmps[a.STRIPE_WIDTH*(x+1)-1-k][64*PAD*j:64*PAD*(j+1)] for k in WIDTH]) for j in range(64)]))
+			else:
+				collage_builder = (lambda x, a=self, PAD=len(pad), WIDTH=range(w // 64): b''.join([b''.join([a.bmps[a.STRIPE_WIDTH*x+k][64*PAD*j:64*PAD*(j+1)] for k in WIDTH]) for j in range(64)]))
+
+			c_bmp += b''.join(map(collage_builder, range(h//64)))
 			self.b_write(os.path.join(dname, "%s_collage.bmp" % (self.fname)), self.b_export_bmp(w, h, c_bmp))
 			self.b_log(sys.stdout, False, 0, "Successfully exported collage file.")
 		return True
 	def b_export_bmp(self, width, height, data):
 		if not self.pal:
-			return "BM"+pack("<L", len(data)+126)+"\x00\x00\x00\x00\x7A\x00\x00\x00\x6C\x00\x00\x00"+pack("<L", width)+pack("<L", height)+"\x01\x00\x20\x00\x03\x00\x00\x00"+pack("<L", len(data))+"\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\xFF\x00\x00\xFF\x00\x00\xFF\x00\x00\x00\x00\x00\x00\xFF niW"+("\x00"*36)+"\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00"+data
+			return b"BM"+pack("<L", len(data)+122)+b"\x00\x00\x00\x00\x7A\x00\x00\x00\x6C\x00\x00\x00"+pack("<L", width)+pack("<L", height)+b"\x01\x00\x20\x00\x03\x00\x00\x00"+pack("<L", len(data))+b"\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\xFF\x00\x00\xFF\x00\x00\xFF\x00\x00\x00\x00\x00\x00\xFF niW"+(b"\x00"*36)+b"\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00"+data
 		else:
-			return "BM"+pack("<L", len(data)+0x36)+"\x00\x00\x00\x00\x36\x04\x00\x00\x28\x00\x00\x00"+pack("<L", width)+pack("<L", height)+"\x01\x00\x08\x00\x00\x00\x00\x00"+pack("<L", len(data)-0x400)+"\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00"+data
+			return b"BM"+pack("<L", len(data)+0x36)+b"\x00\x00\x00\x00\x36\x04\x00\x00\x28\x00\x00\x00"+pack("<L", width)+pack("<L", height)+b"\x01\x00\x08\x00\x00\x00\x00\x00"+pack("<L", len(data)-0x400)+b"\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00"+data
 	def b_write(self, fname, data):
 		with open(fname, "wb") as f:
 			f.write(data)
@@ -212,7 +211,7 @@ class BMCContainer():
 		return True
 
 if __name__ == "__main__":
-	prs = argparse.ArgumentParser(description="RDP Bitmap Cache parser (v. 1.03, 30/04/2018)")
+	prs = argparse.ArgumentParser(description="RDP Bitmap Cache parser (v. 2.00, 04/12/2020)")
 	prs.add_argument("-s", "--src", help="Specify the BMCache file or directory to process.", required=True)
 	prs.add_argument("-d", "--dest", help="Specify the directory where to store the extracted bitmaps.", required=True)
 	prs.add_argument("-c", "--count", help="Only extract the given number of bitmaps.", type=int, default=-1)
