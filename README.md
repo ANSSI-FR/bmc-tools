@@ -19,6 +19,7 @@ With the following arguments meaning:
 ```
 ## Changelog
 ```
+04/12/2020		2.00	Now compatible with both Python2 and Python3.
 23/11/2020		1.04	Fixed Bitmap size field.
 30/04/2018		1.03	Added extra aggregated bitmap/collage output.
 22/04/2018		1.02	Added support for (old?) bcache23.bmc files.
@@ -28,3 +29,5 @@ With the following arguments meaning:
 01/07/2016		1.00a	cacheXXXX.bin header detection fixed.
 27/06/2016		1.00	Initial release.
 ```
+## Footnote
+Unlike Python2, Python3 is quite slow at generating collage bitmap...
