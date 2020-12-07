@@ -30,3 +30,5 @@ With the following arguments meaning:
 01/07/2016		1.00a	cacheXXXX.bin header detection fixed.
 27/06/2016		1.00	Initial release.
 ```
+## Footnote
+Unlike Python2, Python3 is quite slow at generating collage bitmap...
