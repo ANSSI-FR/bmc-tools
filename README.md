@@ -19,7 +19,8 @@ With the following arguments meaning:
 ```
 ## Changelog
 ```
-07/12/2020		2.01	Improved collage creation under Python3.
+07/12/2020		2.11	Corrected minor string printing issue under Python3.
+07/12/2020		2.10	Improved collage creation under Python3.
 04/12/2020		2.00	Now compatible with both Python2 and Python3.
 23/11/2020		1.04	Fixed Bitmap size field.
 30/04/2018		1.03	Added extra aggregated bitmap/collage output.
@@ -30,5 +31,3 @@ With the following arguments meaning:
 01/07/2016		1.00a	cacheXXXX.bin header detection fixed.
 27/06/2016		1.00	Initial release.
 ```
-## Footnote
-Unlike Python2, Python3 is quite slow at generating collage bitmap...

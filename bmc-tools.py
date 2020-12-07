@@ -47,7 +47,7 @@ class BMCContainer():
 			self.b_log(sys.stdout, True, 2, "Subsequent header version: %d." % (unpack("<L", self.bdat[len(self.BIN_FILE_HEADER):len(self.BIN_FILE_HEADER)+4])[0]))
 			self.bdat = self.bdat[len(self.BIN_FILE_HEADER)+4:]
 			self.btype = self.BIN_CONTAINER
-		self.b_log(sys.stdout, True, 0, "Successfully loaded '%s' as a %s container." % (self.fname, self.btype))
+		self.b_log(sys.stdout, True, 0, "Successfully loaded '%s' as a %s container." % (self.fname, self.btype.decode()))
 		return True
 	def b_process(self):
 		if len(self.bdat) == 0:
@@ -210,7 +210,7 @@ class BMCContainer():
 		return True
 
 if __name__ == "__main__":
-	prs = argparse.ArgumentParser(description="RDP Bitmap Cache parser (v. 2.01, 2020/12/07)")
+	prs = argparse.ArgumentParser(description="RDP Bitmap Cache parser (v. 2.11, 2020/12/07)")
 	prs.add_argument("-s", "--src", help="Specify the BMCache file or directory to process.", required=True)
 	prs.add_argument("-d", "--dest", help="Specify the directory where to store the extracted bitmaps.", required=True)
 	prs.add_argument("-c", "--count", help="Only extract the given number of bitmaps.", type=int, default=-1)
