@@ -186,13 +186,11 @@ class BMCContainer():
 				w = self.STRIPE_WIDTH*64
 				h*=len(self.bmps)//self.STRIPE_WIDTH
 			c_bmp = b"" if not self.pal else self.PALETTE
-			for i in range(h//64):
-				for j in range(64):
-					for k in range(w//64):
-						if self.btype == self.BIN_CONTAINER:
-							c_bmp+=self.bmps[self.STRIPE_WIDTH*(i+1)-1-k][64*len(pad)*j:64*len(pad)*(j+1)]
-						else:
-							c_bmp+=self.bmps[self.STRIPE_WIDTH*i+k][64*len(pad)*j:64*len(pad)*(j+1)]
+			if self.btype == self.BIN_CONTAINER:
+				collage_builder = (lambda x, a=self, PAD=len(pad), WIDTH=range(w // 64): b''.join([b''.join([a.bmps[a.STRIPE_WIDTH*(x+1)-1-k][64*PAD*j:64*PAD*(j+1)] for k in WIDTH]) for j in range(64)]))
+			else:
+				collage_builder = (lambda x, a=self, PAD=len(pad), WIDTH=range(w // 64): b''.join([b''.join([a.bmps[a.STRIPE_WIDTH*x+k][64*PAD*j:64*PAD*(j+1)] for k in WIDTH]) for j in range(64)]))
+			c_bmp += b''.join(map(collage_builder, range(h//64)))
 			self.b_write(os.path.join(dname, "%s_collage.bmp" % (self.fname)), self.b_export_bmp(w, h, c_bmp))
 			self.b_log(sys.stdout, False, 0, "Successfully exported collage file.")
 		return True
@@ -212,7 +210,7 @@ class BMCContainer():
 		return True
 
 if __name__ == "__main__":
-	prs = argparse.ArgumentParser(description="RDP Bitmap Cache parser (v. 2.00, 04/12/2020)")
+	prs = argparse.ArgumentParser(description="RDP Bitmap Cache parser (v. 2.01, 2020/12/07)")
 	prs.add_argument("-s", "--src", help="Specify the BMCache file or directory to process.", required=True)
 	prs.add_argument("-d", "--dest", help="Specify the directory where to store the extracted bitmaps.", required=True)
 	prs.add_argument("-c", "--count", help="Only extract the given number of bitmaps.", type=int, default=-1)

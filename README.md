@@ -19,6 +19,7 @@ With the following arguments meaning:
 ```
 ## Changelog
 ```
+07/12/2020		2.01	Improved collage creation under Python3.
 04/12/2020		2.00	Now compatible with both Python2 and Python3.
 23/11/2020		1.04	Fixed Bitmap size field.
 30/04/2018		1.03	Added extra aggregated bitmap/collage output.
