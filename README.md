@@ -19,6 +19,7 @@ With the following arguments meaning:
 ```
 ## Changelog
 ```
+10/02/2022		3.00	Now performing tile decompression.
 07/12/2020		2.11	Corrected minor string printing issue under Python3.
 07/12/2020		2.10	Improved collage creation under Python3.
 04/12/2020		2.00	Now compatible with both Python2 and Python3.
