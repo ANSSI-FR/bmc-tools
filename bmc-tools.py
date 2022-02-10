@@ -12,6 +12,8 @@ class BMCContainer():
 	STRIPE_WIDTH = 64
 	LOG_TYPES = ["[===]", "[+++]", "[---]", "[!!!]"]
 	PALETTE = bytes(bytearray((0, 0, 0, 0, 0, 0, 128, 0, 0, 128, 0, 0, 0, 128, 128, 0, 128, 0, 0, 0, 128, 0, 128, 0, 128, 128, 0, 0, 192, 192, 192, 0, 192, 220, 192, 0, 240, 202, 166, 0, 0, 32, 64, 0, 0, 32, 96, 0, 0, 32, 128, 0, 0, 32, 160, 0, 0, 32, 192, 0, 0, 32, 224, 0, 0, 64, 0, 0, 0, 64, 32, 0, 0, 64, 64, 0, 0, 64, 96, 0, 0, 64, 128, 0, 0, 64, 160, 0, 0, 64, 192, 0, 0, 64, 224, 0, 0, 96, 0, 0, 0, 96, 32, 0, 0, 96, 64, 0, 0, 96, 96, 0, 0, 96, 128, 0, 0, 96, 160, 0, 0, 96, 192, 0, 0, 96, 224, 0, 0, 128, 0, 0, 0, 128, 32, 0, 0, 128, 64, 0, 0, 128, 96, 0, 0, 128, 128, 0, 0, 128, 160, 0, 0, 128, 192, 0, 0, 128, 224, 0, 0, 160, 0, 0, 0, 160, 32, 0, 0, 160, 64, 0, 0, 160, 96, 0, 0, 160, 128, 0, 0, 160, 160, 0, 0, 160, 192, 0, 0, 160, 224, 0, 0, 192, 0, 0, 0, 192, 32, 0, 0, 192, 64, 0, 0, 192, 96, 0, 0, 192, 128, 0, 0, 192, 160, 0, 0, 192, 192, 0, 0, 192, 224, 0, 0, 224, 0, 0, 0, 224, 32, 0, 0, 224, 64, 0, 0, 224, 96, 0, 0, 224, 128, 0, 0, 224, 160, 0, 0, 224, 192, 0, 0, 224, 224, 0, 64, 0, 0, 0, 64, 0, 32, 0, 64, 0, 64, 0, 64, 0, 96, 0, 64, 0, 128, 0, 64, 0, 160, 0, 64, 0, 192, 0, 64, 0, 224, 0, 64, 32, 0, 0, 64, 32, 32, 0, 64, 32, 64, 0, 64, 32, 96, 0, 64, 32, 128, 0, 64, 32, 160, 0, 64, 32, 192, 0, 64, 32, 224, 0, 64, 64, 0, 0, 64, 64, 32, 0, 64, 64, 64, 0, 64, 64, 96, 0, 64, 64, 128, 0, 64, 64, 160, 0, 64, 64, 192, 0, 64, 64, 224, 0, 64, 96, 0, 0, 64, 96, 32, 0, 64, 96, 64, 0, 64, 96, 96, 0, 64, 96, 128, 0, 64, 96, 160, 0, 64, 96, 192, 0, 64, 96, 224, 0, 64, 128, 0, 0, 64, 128, 32, 0, 64, 128, 64, 0, 64, 128, 96, 0, 64, 128, 128, 0, 64, 128, 160, 0, 64, 128, 192, 0, 64, 128, 224, 0, 64, 160, 0, 0, 64, 160, 32, 0, 64, 160, 64, 0, 64, 160, 96, 0, 64, 160, 128, 0, 64, 160, 160, 0, 64, 160, 192, 0, 64, 160, 224, 0, 64, 192, 0, 0, 64, 192, 32, 0, 64, 192, 64, 0, 64, 192, 96, 0, 64, 192, 128, 0, 64, 192, 160, 0, 64, 192, 192, 0, 64, 192, 224, 0, 64, 224, 0, 0, 64, 224, 32, 0, 64, 224, 64, 0, 64, 224, 96, 0, 64, 224, 128, 0, 64, 224, 160, 0, 64, 224, 192, 0, 64, 224, 224, 0, 128, 0, 0, 0, 128, 0, 32, 0, 128, 0, 64, 0, 128, 0, 96, 0, 128, 0, 128, 0, 128, 0, 160, 0, 128, 0, 192, 0, 128, 0, 224, 0, 128, 32, 0, 0, 128, 32, 32, 0, 128, 32, 64, 0, 128, 32, 96, 0, 128, 32, 128, 0, 128, 32, 160, 0, 128, 32, 192, 0, 128, 32, 224, 0, 128, 64, 0, 0, 128, 64, 32, 0, 128, 64, 64, 0, 128, 64, 96, 0, 128, 64, 128, 0, 128, 64, 160, 0, 128, 64, 192, 0, 128, 64, 224, 0, 128, 96, 0, 0, 128, 96, 32, 0, 128, 96, 64, 0, 128, 96, 96, 0, 128, 96, 128, 0, 128, 96, 160, 0, 128, 96, 192, 0, 128, 96, 224, 0, 128, 128, 0, 0, 128, 128, 32, 0, 128, 128, 64, 0, 128, 128, 96, 0, 128, 128, 128, 0, 128, 128, 160, 0, 128, 128, 192, 0, 128, 128, 224, 0, 128, 160, 0, 0, 128, 160, 32, 0, 128, 160, 64, 0, 128, 160, 96, 0, 128, 160, 128, 0, 128, 160, 160, 0, 128, 160, 192, 0, 128, 160, 224, 0, 128, 192, 0, 0, 128, 192, 32, 0, 128, 192, 64, 0, 128, 192, 96, 0, 128, 192, 128, 0, 128, 192, 160, 0, 128, 192, 192, 0, 128, 192, 224, 0, 128, 224, 0, 0, 128, 224, 32, 0, 128, 224, 64, 0, 128, 224, 96, 0, 128, 224, 128, 0, 128, 224, 160, 0, 128, 224, 192, 0, 128, 224, 224, 0, 192, 0, 0, 0, 192, 0, 32, 0, 192, 0, 64, 0, 192, 0, 96, 0, 192, 0, 128, 0, 192, 0, 160, 0, 192, 0, 192, 0, 192, 0, 224, 0, 192, 32, 0, 0, 192, 32, 32, 0, 192, 32, 64, 0, 192, 32, 96, 0, 192, 32, 128, 0, 192, 32, 160, 0, 192, 32, 192, 0, 192, 32, 224, 0, 192, 64, 0, 0, 192, 64, 32, 0, 192, 64, 64, 0, 192, 64, 96, 0, 192, 64, 128, 0, 192, 64, 160, 0, 192, 64, 192, 0, 192, 64, 224, 0, 192, 96, 0, 0, 192, 96, 32, 0, 192, 96, 64, 0, 192, 96, 96, 0, 192, 96, 128, 0, 192, 96, 160, 0, 192, 96, 192, 0, 192, 96, 224, 0, 192, 128, 0, 0, 192, 128, 32, 0, 192, 128, 64, 0, 192, 128, 96, 0, 192, 128, 128, 0, 192, 128, 160, 0, 192, 128, 192, 0, 192, 128, 224, 0, 192, 160, 0, 0, 192, 160, 32, 0, 192, 160, 64, 0, 192, 160, 96, 0, 192, 160, 128, 0, 192, 160, 160, 0, 192, 160, 192, 0, 192, 160, 224, 0, 192, 192, 0, 0, 192, 192, 32, 0, 192, 192, 64, 0, 192, 192, 96, 0, 192, 192, 128, 0, 192, 192, 160, 0, 240, 251, 255, 0, 164, 160, 160, 0, 128, 128, 128, 0, 0, 0, 255, 0, 0, 255, 0, 0, 0, 255, 255, 0, 255, 0, 0, 0, 255, 0, 255, 0, 255, 255, 0, 0, 255, 255, 255, 0)))
+	COLOR_BLACK = b"\x00"
+	COLOR_WHITE = b"\xFF"
 	def __init__(self, verbose=False, count=0, old=False, big=False, width=64):
 		self.bdat = ""
 		self.o_bmps = []
@@ -66,7 +68,6 @@ class BMCContainer():
 				t_bmp = ""
 				t_len, t_params = unpack("<LL", t_hdr[-0x8:])
 				if t_params & 0x08: #This bit is always ONE when relevant data is smaller than expected data, thus it is most likely the "compression" bit flag.
-					self.b_log(sys.stdout, False, 3, "Tile data is compressed (%d bytes compressed in %d bytes); skipping." % (t_width*t_height*4, t_len))
 					if bl == 0:
 						if "22.bmc" in self.fname:
 							bl = 64*64*2
@@ -84,6 +85,14 @@ class BMCContainer():
 							if bl == 0:
 								self.b_log(sys.stderr, False, 3, "Unable to determine data pattern size; exiting before throwing any error!")
 								return False
+					o_bmp = b""
+					t_bmp = self.b_uncompress(self.bdat[len(t_hdr):len(t_hdr)+t_len], bl//(64*64))
+					if len(t_bmp) > 0:
+						if len(t_bmp) != t_width*t_height*bl//(64*64):
+							self.b_log(sys.stderr, False, 3, "Uncompressed tile data seems bogus (uncompressed %d bytes while expecting %d). Discarding tile." % (len(t_bmp), t_width*t_height*bl//(64*64)))
+							t_bmp = b""
+						else:
+							t_bmp = self.b_parse_rgb565(t_bmp)
 				else:
 					cf = t_len//(t_width*t_height)
 					if cf == 4:
@@ -113,7 +122,8 @@ class BMCContainer():
 					bl = cf*64*64
 			if len(t_bmp) > 0:
 				self.bmps.append(t_bmp)
-				self.o_bmps.append(o_bmp)
+				if len(o_bmp) > 0:
+					self.o_bmps.append(o_bmp)
 				if len(self.bmps)%100 == 0:
 					self.b_log(sys.stdout, True, 1, "%d tiles successfully extracted so far." % (len(self.bmps)))
 			self.bdat = self.bdat[len(t_hdr)+bl:]
@@ -156,6 +166,162 @@ class BMCContainer():
 			else:
 				d_out+=data[:3]+b"\xFF"
 			data = data[3:]
+		return d_out
+	def b_unrle(self, data):
+		if len(data) == 0:
+			return (-1, 1, 0)
+		x = ord(data[0:1])
+		if (x&0xF0) == 0xF0:
+			if x in [0xF5, 0xFB, 0xFC, 0xFF]:
+				return (-1, 2, x)
+			elif x in [0xFD, 0xFE]:
+				return (x, 0, 1)
+			elif x in [0xF9, 0xFA]:
+				return (x, 8, 1)
+			elif len(data) < 3:
+				return (-1, 1, 0)
+			else:
+				c = unpack("<H", data[1:3])[0]
+				return (x, c, 3)
+		elif (x&0xE0) == 0xA0:
+			return (-1, 2, x)
+		else:
+			if (x&0x80) == 0x00 or (x&0xE0) == 0x80:
+				c = x&0x1F
+				x = x&0xE0
+				o = 32
+			else:
+				c = x&0x0F
+				x = x&0xF0
+				o = 16
+			if x in [0x40, 0xD0]:
+				c*=8
+				o = 1
+			if c == 0:
+				if len(data) < 2:
+					return (-1, 1, 0)
+				else:
+					c = ord(data[1:2])+o
+				o = 2
+			else:
+				o = 1
+			return (x, c, o)
+		return (-1, 3, 0)
+	def b_uncompress(self, data, bbp):
+		d_out = b""
+		bro = -1
+		fgc = self.COLOR_WHITE*bbp
+		while len(data) > 0:
+			cmd, rl, sz = self.b_unrle(data[:3])
+			if cmd == -1:
+				if rl == 1:
+					self.b_log(sys.stderr, False, 3, "Unexpected end of compressed stream. Skipping tile.")
+				elif rl == 2:
+					self.b_log(sys.stderr, False, 3, "Unexpected decompression command encountered (0x%02X). Skipping tile." % (sz))
+				else:
+					self.b_log(sys.stderr, False, 3, "Unhandled case in decompression routine. Skipping tile.")
+				return b""
+			data = data[sz:]
+			if cmd in [0x00, 0xF0]:
+				if len(d_out) < 64*bbp:
+					if bro == 0:
+						d_out+=fgc
+						rl-=1
+					d_out+=(self.COLOR_BLACK*bbp)*rl
+				else:
+					if bro > 0:
+						c = d_out[-64*bbp:][:bbp]
+						for i in range(bbp):
+							d_out+=bytearray((ord(c[i:i+1])^ord(fgc[i:i+1]), ))
+						rl-=1
+					while rl > 0:
+						d_out+=d_out[-64*bbp:][:bbp]
+						rl-=1
+				bro = len(d_out)//(64*bbp)
+			elif cmd in [0x20, 0xC0, 0xF1, 0xF6]:
+				if cmd in [0xC0, 0xF6]:
+					if len(data) < bbp:
+						self.b_log(sys.stderr, False, 3, "Unexpected end of compressed stream. Skipping tile." % (cmd, rl))
+						return b""
+					fgc = data[:bbp]
+					data = data[bbp:]
+				if len(d_out) < 64*bbp:
+					d_out+=fgc*rl
+				else:
+					while rl > 0:
+						c = d_out[-64*bbp:][:bbp]
+						for i in range(bbp):
+							d_out+=bytearray((ord(c[i:i+1])^ord(fgc[i:i+1]), ))
+						rl-=1
+			elif cmd in [0xE0, 0xF8]:
+				if len(data) < 2*bbp:
+					self.b_log(sys.stderr, False, 3, "Unexpected end of compressed stream. Skipping tile.")
+					return b""
+				d_out+=data[:2*bbp]*rl
+				data = data[2*bbp:]
+			elif cmd in [0x60, 0xF3]:
+				if len(data) < bbp:
+					self.b_log(sys.stderr, False, 3, "Unexpected end of compressed stream. Skipping tile.")
+					return b""
+				d_out+=data[:bbp]*rl
+				data = data[bbp:]
+			elif cmd in [0x40, 0xD0, 0xF2, 0xF7, 0xF9, 0xFA]:
+				if cmd in [0xD0, 0xF7]:
+					if len(data) < bbp:
+						self.b_log(sys.stderr, False, 3, "Unexpected end of compressed stream. Skipping tile.")
+						return b""
+					fgc = data[:bbp]
+					data = data[bbp:]
+				if cmd == 0xF9:
+					msk = b"\x03"
+					ml = 1
+				elif cmd == 0xFA:
+					msk = b"\x05"
+					ml = 1
+				else:
+					if (rl%8) != 0:
+						ml = (rl//8)+1
+					else:
+						ml = rl//8
+					if len(data) < ml:
+						self.b_log(sys.stderr, False, 3, "Unexpected end of compressed stream. Skipping tile.")
+						return b""
+					msk = data[:ml]
+					data = data[ml:]
+				k = 0
+				while rl > 0:
+					if (k%8) == 0:
+						m = ord(msk[k//8:][:1])
+					b = m&(0x1<<(k%8))
+					if len(d_out) < 64*bbp:
+						if b == 0:
+							d_out+=(self.COLOR_BLACK*bbp)
+						else:
+							d_out+=fgc
+					else:
+						c = d_out[-64*bbp:][:bbp]
+						if b == 0:
+							d_out+=c
+						else:
+							for i in range(bbp):
+								d_out+=bytearray((ord(c[i:i+1])^ord(fgc[i:i+1]), ))
+					k+=1
+					rl-=1
+			elif cmd in [0x80, 0xF4]:
+				if len(data) < bbp*rl:
+					self.b_log(sys.stderr, False, 3, "Unexpected end of compressed stream. Skipping tile.")
+					return b""
+				d_out+=data[:rl*bbp]
+				data = data[rl*bbp:]
+			elif cmd == 0xFD:
+				d_out+=(self.COLOR_WHITE*bbp)
+			elif cmd == 0xFE:
+				d_out+=(self.COLOR_BLACK*bbp)
+			else:
+				self.b_log(sys.stderr, False, 3, "Unhandled decompression command (0x%02X). Skipping tile." % (cmd))
+				return b""
+			if cmd not in [0x00, 0xF0]:
+				bro = -1
 		return d_out
 	def b_export(self, dname):
 		if not os.path.isdir(dname):
@@ -210,7 +376,7 @@ class BMCContainer():
 		return True
 
 if __name__ == "__main__":
-	prs = argparse.ArgumentParser(description="RDP Bitmap Cache parser (v. 2.11, 2020/12/07)")
+	prs = argparse.ArgumentParser(description="RDP Bitmap Cache parser (v. 3.00, 2022/02/10)")
 	prs.add_argument("-s", "--src", help="Specify the BMCache file or directory to process.", required=True)
 	prs.add_argument("-d", "--dest", help="Specify the directory where to store the extracted bitmaps.", required=True)
 	prs.add_argument("-c", "--count", help="Only extract the given number of bitmaps.", type=int, default=-1)
