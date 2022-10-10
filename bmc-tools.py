@@ -324,9 +324,6 @@ class BMCContainer():
 				bro = -1
 		return d_out
 	def b_export(self, dname):
-		if not os.path.isdir(dname):
-			self.b_log(sys.stderr, False, 3, "Destination must be an already existing folder.")
-			return False
 		self.fname = os.path.basename(self.fname)
 		for i in range(len(self.bmps)):
 			self.b_write(os.path.join(dname, "%s_%04d.bmp" % (self.fname, i)), self.b_export_bmp(64, len(self.bmps[i])//256, self.bmps[i]))
@@ -366,9 +363,12 @@ class BMCContainer():
 		else:
 			return b"BM"+pack("<L", len(data)+0x36)+b"\x00\x00\x00\x00\x36\x04\x00\x00\x28\x00\x00\x00"+pack("<L", width)+pack("<L", height)+b"\x01\x00\x08\x00\x00\x00\x00\x00"+pack("<L", len(data)-0x400)+b"\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00"+data
 	def b_write(self, fname, data):
-		with open(fname, "wb") as f:
-			f.write(data)
-		return True
+		try:
+			with open(fname, "wb") as f:
+				f.write(data)
+		except(Exception) as e:
+			self.b_log(sys.stderr, False, 3, "Error writing file: %s" % (str(e)))
+			exit(-1)
 	def b_flush(self):
 		self.bdat = ""
 		self.bmps = []
@@ -386,6 +386,18 @@ if __name__ == "__main__":
 	prs.add_argument("-w", "--width", help="Specify the number of tiles per line of the aggregated bitmap (default=64).", type=int, default=64)
 	args = prs.parse_args(sys.argv[1:])
 	bmcc = BMCContainer(verbose=args.verbose, count=args.count, old=args.old, big=args.bitmap, width=args.width)
+	
+	if not os.path.isdir(args.dest):
+		sys.stdout.write("The output folder does not exist.\nDo you want to create it ? [y/N] ")
+		if input().lower() != "y":
+			exit(-1)
+		try:
+			os.mkdir(args.dest)
+		except(Exception) as e:
+			sys.stderr.write("Unable to create the output folder.\n%s\n" % (e))
+			exit(-1)
+		sys.stdout.write("Output folder %s created.\n" % (args.dest))
+
 	if os.path.isdir(args.src):
 		sys.stdout.write("[+++] Processing a directory...%s" % (os.linesep))
 		src_files = []
