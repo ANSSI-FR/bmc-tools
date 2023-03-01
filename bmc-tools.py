@@ -122,8 +122,7 @@ class BMCContainer():
 					bl = cf*64*64
 			if len(t_bmp) > 0:
 				self.bmps.append(t_bmp)
-				if len(o_bmp) > 0:
-					self.o_bmps.append(o_bmp)
+				self.o_bmps.append(o_bmp)
 				if len(self.bmps)%100 == 0:
 					self.b_log(sys.stdout, True, 1, "%d tiles successfully extracted so far." % (len(self.bmps)))
 			self.bdat = self.bdat[len(t_hdr)+bl:]
@@ -330,7 +329,7 @@ class BMCContainer():
 		self.fname = os.path.basename(self.fname)
 		for i in range(len(self.bmps)):
 			self.b_write(os.path.join(dname, "%s_%04d.bmp" % (self.fname, i)), self.b_export_bmp(64, len(self.bmps[i])//256, self.bmps[i]))
-			if self.oldsave and len(self.o_bmps[i]) > 0:
+			if self.oldsave and i < len(self.o_bmps) and len(self.o_bmps[i]) > 0:
 				self.b_write(os.path.join(dname, "%s_old_%04d.bmp" % (self.fname, i)), self.b_export_bmp(64, len(self.o_bmps[i])//256, self.o_bmps[i]))
 		self.b_log(sys.stdout, False, 0, "Successfully exported %d files." % (len(self.bmps)))
 		if self.big:
