@@ -19,6 +19,8 @@ With the following arguments meaning:
 ```
 ## Changelog
 ```
+02/03/2023		3.02	Added destination folder existence check beforehand.
+01/03/2023		3.01	Fixed old Bitmaps storage and export.
 10/02/2022		3.00	Now performing tile decompression.
 07/12/2020		2.11	Corrected minor string printing issue under Python3.
 07/12/2020		2.10	Improved collage creation under Python3.

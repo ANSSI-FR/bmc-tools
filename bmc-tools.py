@@ -375,7 +375,7 @@ class BMCContainer():
 		return True
 
 if __name__ == "__main__":
-	prs = argparse.ArgumentParser(description="RDP Bitmap Cache parser (v. 3.00, 2022/02/10)")
+	prs = argparse.ArgumentParser(description="RDP Bitmap Cache parser (v. 3.02, 2023/03/02)")
 	prs.add_argument("-s", "--src", help="Specify the BMCache file or directory to process.", required=True)
 	prs.add_argument("-d", "--dest", help="Specify the directory where to store the extracted bitmaps.", required=True)
 	prs.add_argument("-c", "--count", help="Only extract the given number of bitmaps.", type=int, default=-1)
@@ -385,9 +385,12 @@ if __name__ == "__main__":
 	prs.add_argument("-w", "--width", help="Specify the number of tiles per line of the aggregated bitmap (default=64).", type=int, default=64)
 	args = prs.parse_args(sys.argv[1:])
 	bmcc = BMCContainer(verbose=args.verbose, count=args.count, old=args.old, big=args.bitmap, width=args.width)
-	if os.path.isdir(args.src):
+	src_files = []
+	if not os.path.isdir(args.dest):
+		sys.stderr.write("Destination folder '%s' does not exist.%s" % (args.dest, os.linesep))
+		exit(-1)
+	elif os.path.isdir(args.src):
 		sys.stdout.write("[+++] Processing a directory...%s" % (os.linesep))
-		src_files = []
 		for root, dirs, files in os.walk(args.src):
 			for f in files:
 				if f.rsplit(".", 1)[-1].upper() in ["BIN", "BMC"]:
@@ -402,7 +405,7 @@ if __name__ == "__main__":
 		exit(-1)
 	else:
 		sys.stdout.write("[+++] Processing a single file: '%s'.%s" % (args.src, os.linesep))
-		src_files = [args.src]
+		src_files.append(args.src)
 	for src in src_files:
 		if bmcc.b_import(src):
 			bmcc.b_process()
