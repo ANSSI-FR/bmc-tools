@@ -383,6 +383,7 @@ if __name__ == "__main__":
 	prs.add_argument("-o", "--old", help="Extract the old bitmap data found in the BMCache file.", action="store_true", default=False)
 	prs.add_argument("-b", "--bitmap", help="Provide a big bitmap aggregating all the tiles.", action="store_true", default=False)
 	prs.add_argument("-w", "--width", help="Specify the number of tiles per line of the aggregated bitmap (default=64).", type=int, default=64)
+	prs.add_argument('-k', "--kape", help="Use this option to split out the different inputs into separate folders", action="store_true", default="False")
 	args = prs.parse_args(sys.argv[1:])
 	bmcc = BMCContainer(verbose=args.verbose, count=args.count, old=args.old, big=args.bitmap, width=args.width)
 	src_files = []
@@ -407,8 +408,19 @@ if __name__ == "__main__":
 		sys.stdout.write("[+++] Processing a single file: '%s'.%s" % (args.src, os.linesep))
 		src_files.append(args.src)
 	for src in src_files:
+		sys.stdout.write("[+++] Processing a file: '%s'.%s" % (src, os.linesep)) 		
 		if bmcc.b_import(src):
+			destination = args.dest
+			if (args.kape):
+				destination = src.replace("\\","_").replace("//","_").replace(":","_")
+				destination = destination.replace("_AppData_Local_Microsoft_Terminal Server Client_Cache","").replace("__users_","")[1:]
+				destination = args.dest + "\\" + destination
+			if not os.path.exists(destination):
+				os.makedirs(destination)
+			
 			bmcc.b_process()
-			bmcc.b_export(args.dest)
+			bmcc.b_export(destination)
 			bmcc.b_flush()
+		
+		
 	del bmcc
