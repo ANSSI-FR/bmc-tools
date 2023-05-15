@@ -16,9 +16,11 @@ With the following arguments meaning:
   -o, --old               Extract the old bitmap data found in the BMCache file.
   -b, --bitmap            Provide a collage bitmap aggregating all the tiles.
   -w WIDTH, --width WIDTH Specify the number of tiles per line of the aggregated bitmap (default=64).
+  -k, --kape            Use this option to split out the different inputs into separate folders
 ```
 ## Changelog
 ```
+15/05/2023    3.03  Added KAPE output to split output into seperate folders
 02/03/2023		3.02	Added destination folder existence check beforehand.
 01/03/2023		3.01	Fixed old Bitmaps storage and export.
 10/02/2022		3.00	Now performing tile decompression.
