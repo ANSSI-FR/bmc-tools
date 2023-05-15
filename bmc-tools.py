@@ -385,6 +385,7 @@ if __name__ == "__main__":
 	prs.add_argument("-w", "--width", help="Specify the number of tiles per line of the aggregated bitmap (default=64).", type=int, default=64)
 	prs.add_argument('-k', "--kape", help="Use this option to split out the different inputs into separate folders", action="store_true", default="False")
 	args = prs.parse_args(sys.argv[1:])
+
 	bmcc = BMCContainer(verbose=args.verbose, count=args.count, old=args.old, big=args.bitmap, width=args.width)
 	src_files = []
 	if not os.path.isdir(args.dest):
@@ -411,12 +412,11 @@ if __name__ == "__main__":
 		sys.stdout.write("[+++] Processing a file: '%s'.%s" % (src, os.linesep)) 		
 		if bmcc.b_import(src):
 			destination = args.dest
-			if (args.kape):
-				destination = src.replace("\\","_").replace("//","_").replace(":","_")
-				destination = destination.replace("_AppData_Local_Microsoft_Terminal Server Client_Cache","").replace("__users_","")[1:]
+			if (args.kape == True):
+				destination = src.replace("\\","_").replace("//","_").replace(":","_").replace("_AppData_Local_Microsoft_Terminal Server Client_Cache","")
 				destination = args.dest + "\\" + destination
-			if not os.path.exists(destination):
-				os.makedirs(destination)
+				if not os.path.exists(destination):
+					os.makedirs(destination)
 			
 			bmcc.b_process()
 			bmcc.b_export(destination)
