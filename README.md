@@ -20,6 +20,7 @@ With the following arguments meaning:
 ```
 ## Changelog
 ```
+01/12/2023		3.04  Fix memory usage for huge speed improvement
 15/05/2023		3.03  Added KAPE output to split output into seperate folders
 02/03/2023		3.02	Added destination folder existence check beforehand.
 01/03/2023		3.01	Fixed old Bitmaps storage and export.
