@@ -339,7 +339,7 @@ class BMCContainer():
 			for i in range(len(self.bmps)):
 				if self.pal:
 					self.bmps[i] = self.bmps[i][len(self.PALETTE):]
-				while len(self.bmps[i]) != 64*64*len(pad):
+				while len(self.bmps[i]) < 64*64*len(pad):
 					self.bmps[i]+=pad*64
 			w = 64*len(self.bmps)
 			h = 64
