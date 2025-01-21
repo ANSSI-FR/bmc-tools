@@ -39,7 +39,7 @@ class BMCContainer():
 			self.b_log(sys.stderr, False, 3, "Data is already waiting to be processed; aborting.")
 			return False
 		with open(fname, "rb") as f:
-			self.bdat = f.read()
+			self.bdat = memoryview(f.read())
 		if len(self.bdat) == 0:
 			self.b_log(sys.stderr, False, 3, "Unable to retrieve file contents; aborting.")
 			return False
@@ -63,7 +63,7 @@ class BMCContainer():
 			key1, key2, t_width, t_height = unpack("<LLHH", t_hdr[:0xC])
 			if self.btype == self.BIN_CONTAINER:
 				bl = 4*t_width*t_height
-				t_bmp = self.b_parse_rgb32b(self.bdat[len(t_hdr):len(t_hdr)+bl])
+				t_bmp = self.b_parse_rgb32b(self.bdat[len(t_hdr):len(t_hdr)+bl].tobytes())
 			elif self.btype == self.BMC_CONTAINER:
 				t_bmp = ""
 				t_len, t_params = unpack("<LL", t_hdr[-0x8:])
@@ -86,7 +86,7 @@ class BMCContainer():
 								self.b_log(sys.stderr, False, 3, "Unable to determine data pattern size; exiting before throwing any error!")
 								return False
 					o_bmp = b""
-					t_bmp = self.b_uncompress(self.bdat[len(t_hdr):len(t_hdr)+t_len], bl//(64*64))
+					t_bmp = self.b_uncompress(self.bdat[len(t_hdr):len(t_hdr)+t_len].tobytes(), bl//(64*64))
 					if len(t_bmp) > 0:
 						if len(t_bmp) != t_width*t_height*bl//(64*64):
 							self.b_log(sys.stderr, False, 3, "Uncompressed tile data seems bogus (uncompressed %d bytes while expecting %d). Discarding tile." % (len(t_bmp), t_width*t_height*bl//(64*64)))
@@ -96,26 +96,26 @@ class BMCContainer():
 				else:
 					cf = t_len//(t_width*t_height)
 					if cf == 4:
-						t_bmp = self.b_parse_rgb32b(self.bdat[len(t_hdr):len(t_hdr)+cf*t_width*t_height])
+						t_bmp = self.b_parse_rgb32b(self.bdat[len(t_hdr):len(t_hdr)+cf*t_width*t_height].tobytes())
 						if t_height != 64:
 							old = True
-							o_bmp = self.b_parse_rgb32b(self.bdat[len(t_hdr)+cf*t_width*t_height:len(t_hdr)+cf*64*64])
+							o_bmp = self.b_parse_rgb32b(self.bdat[len(t_hdr)+cf*t_width*t_height:len(t_hdr)+cf*64*64].tobytes())
 					elif cf == 3:
-						t_bmp = self.b_parse_rgb24b(self.bdat[len(t_hdr):len(t_hdr)+cf*t_width*t_height])
+						t_bmp = self.b_parse_rgb24b(self.bdat[len(t_hdr):len(t_hdr)+cf*t_width*t_height].tobytes())
 						if t_height != 64:
 							old = True
-							o_bmp = self.b_parse_rgb24b(self.bdat[len(t_hdr)+cf*t_width*t_height:len(t_hdr)+cf*64*64])
+							o_bmp = self.b_parse_rgb24b(self.bdat[len(t_hdr)+cf*t_width*t_height:len(t_hdr)+cf*64*64].tobytes())
 					elif cf == 2:
-						t_bmp = self.b_parse_rgb565(self.bdat[len(t_hdr):len(t_hdr)+cf*t_width*t_height])
+						t_bmp = self.b_parse_rgb565(self.bdat[len(t_hdr):len(t_hdr)+cf*t_width*t_height].tobytes())
 						if t_height != 64:
 							old = True
-							o_bmp = self.b_parse_rgb565(self.bdat[len(t_hdr)+cf*t_width*t_height:len(t_hdr)+cf*64*64])
+							o_bmp = self.b_parse_rgb565(self.bdat[len(t_hdr)+cf*t_width*t_height:len(t_hdr)+cf*64*64].tobytes())
 					elif cf == 1:
 						self.pal = True
-						t_bmp = self.PALETTE+self.bdat[len(t_hdr):len(t_hdr)+cf*t_width*t_height]
+						t_bmp = self.PALETTE+self.bdat[len(t_hdr):len(t_hdr)+cf*t_width*t_height].tobytes()
 						if t_height != 64:
 							old = True
-							o_bmp = self.PALETTE+self.bdat[len(t_hdr)+cf*t_width*t_height:len(t_hdr)+cf*64*64]
+							o_bmp = self.PALETTE+self.bdat[len(t_hdr)+cf*t_width*t_height:len(t_hdr)+cf*64*64].tobytes()
 					else:
 						self.b_log(sys.stderr, False, 3, "Unexpected bpp (%d) found during processing; aborting." % (8*cf))
 						return False
@@ -375,7 +375,7 @@ class BMCContainer():
 		return True
 
 if __name__ == "__main__":
-	prs = argparse.ArgumentParser(description="RDP Bitmap Cache parser (v. 3.03, 2023/05/15)")
+	prs = argparse.ArgumentParser(description="RDP Bitmap Cache parser (v. 3.04, 2023/12/02)")
 	prs.add_argument("-s", "--src", help="Specify the BMCache file or directory to process.", required=True)
 	prs.add_argument("-d", "--dest", help="Specify the directory where to store the extracted bitmaps.", required=True)
 	prs.add_argument("-c", "--count", help="Only extract the given number of bitmaps.", type=int, default=-1)
