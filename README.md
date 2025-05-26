@@ -18,6 +18,12 @@ With the following arguments meaning:
   -w WIDTH, --width WIDTH Specify the number of tiles per line of the aggregated bitmap (default=64).
   -k, --kape            Use this option to split out the different inputs into separate folders
 ```
+
+## GUI Usage 
+`python bitmap_cache_parser_gui.py`<br><br>
+<img width="959" alt="image" src="https://github.com/user-attachments/assets/08cd55ec-8cb2-405b-bba3-0e030bace8da" />
+
+
 ## Changelog
 ```
 01/12/2023		3.04  Fix memory usage for huge speed improvement
